@@ -1,0 +1,37 @@
+@startuml RiskCalculatorDeploymentDiagram
+
+!theme plain
+skinparam backgroundColor transparent
+
+title Risk Index Calculator - Deployment Архитектура
+
+' Разработка и создание
+node "Разработка" as Dev {
+  artifact "React + Vite\nИсходный код"
+}
+
+artifact "Статическая сборка\n(/dist)" as Build
+
+' Хостинг
+cloud "Статический хостинг\n(GitHub Pages, Vercel, Netlify)" as Hosting
+
+' Пользовательская среда
+node "Браузер пользователя" as Browser {
+  artifact "React App"
+  artifact "Локальное хранилище"
+}
+
+' Последовательность развертывания
+Dev --> Build : npm run build
+Build --> Hosting : deploy static files
+Hosting --> Browser : HTTPS delivery
+Browser --> Browser : локальные расчеты
+
+' Заметки
+note right of Build : "HTML, CSS, JavaScript\nНе требуется серверная среда выполнения"
+
+note bottom of Browser : "Клиентские расчеты рисков\nХранение проектов в браузере"
+
+note top of Hosting : "Бесплатный статический хостинг\nГлобальная доставка CDN"
+
+@enduml

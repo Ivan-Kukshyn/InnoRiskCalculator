@@ -1,0 +1,48 @@
+@startuml RiskIndexCalculatorComponentDiagram
+
+!theme plain
+skinparam backgroundColor transparent
+
+title Risk Index Calculator - Component Архитектура
+
+' Основные компоненты
+package "UI Components" {
+  [App] as App
+  [RiskFactorInput] as Input
+  [Results Display] as Results
+}
+
+package "Логика приложения" {
+  [Zustand Store] as Store
+  [RiskCalculationService] as CalcService
+}
+
+package "Хранилище браузера" {
+  [Local Storage] as Storage
+}
+
+package "Среда выполнения" {
+  [React + Vite] as Framework
+  [Web Browser] as Browser
+}
+
+' Поток компонентов
+App --> Input : отображает
+App --> Results : отображает
+Input --> Store : обновляет
+Results --> Store : читает
+Store --> CalcService : выполняет расчет
+Store --> Storage : сохраняет/загружает
+
+' Среда выполнения
+Framework --> App : запускает
+Browser --> Framework : хостит
+
+' Заметки
+note right of CalcService : "5 факторов риска\n4 категории результата\nМгновенный расчет"
+
+note bottom of Storage : "Сохранение проектов\nВ браузере пользователя"
+
+note top of Framework : "React 19 + Vite\nBootstrap UI"
+
+@enduml

@@ -1,0 +1,374 @@
+/* Основная структура приложения */
+.min-vh-100 {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Заголовок однотонный */
+.bg-primary {
+  background-color: #0d6efd;
+}
+
+/* Пользовательские эффекты при наведении курсора на кнопки */
+.btn:hover {
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+/* Улучшенные тени карт */
+.card {
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Пользовательские стили ползунка диапазона */
+.form-range::-webkit-slider-thumb {
+  background: #0d6efd;
+  border: 2px solid #fff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  transition: all 0.15s ease-in-out;
+}
+
+.form-range::-webkit-slider-thumb:hover {
+  background: #0b5ed7;
+  transform: scale(1.1);
+}
+
+.form-range::-moz-range-thumb {
+  background: #0d6efd;
+  border: 2px solid #fff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  transition: all 0.15s ease-in-out;
+}
+
+.form-range::-moz-range-thumb:hover {
+  background: #0b5ed7;
+  transform: scale(1.1);
+}
+
+/* Улучшения значков */
+.badge {
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+/* Улучшения предупреждений */
+.alert {
+  border: none;
+  font-weight: 500;
+}
+
+/* Улучшения мобильной адаптивности */
+@media (max-width: 768px) {
+  .display-5 {
+    font-size: 2rem;
+  }
+  
+  .display-3 {
+    font-size: 2.5rem;
+  }
+  
+  .sticky-lg-top {
+    position: static;
+  }
+}
+
+@media (max-width: 576px) {
+  .container-fluid {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .display-5 {
+    font-size: 1.75rem;
+  }
+  
+  .lead {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .App-header {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .App-main {
+    padding: 0 0.75rem 0.75rem 0.75rem;
+  }
+  
+  .side-by-side-layout {
+    flex-direction: column;
+    height: calc(100vh - 80px);
+    gap: 0.75rem;
+    overflow: hidden;
+  }
+  
+  .risk-factors-section {
+    flex: 1;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+  
+  .risk-center-section {
+    flex: 0 0 240px;
+    width: 100%;
+    height: 240px;
+    min-height: 240px;
+    max-height: 240px;
+    order: -1; /* Переместить индекс риска в верхнюю часть на мобильном устройстве */
+  }
+  
+  .risk-placeholder,
+  .risk-summary {
+    width: 100%;
+    max-width: 400px;
+    height: 220px;
+    min-height: 220px;
+    max-height: 220px;
+    padding: 1rem;
+    margin: 0 auto;
+  }
+  
+  .placeholder-circle {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .App-header {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .App-header h1 {
+    font-size: 1.3rem;
+  }
+  
+  .App-header p {
+    font-size: 0.85rem;
+  }
+  
+  .App-main {
+    padding: 0 0.5rem 0.5rem 0.5rem;
+  }
+  
+  .side-by-side-layout {
+    gap: 0.5rem;
+    height: calc(100vh - 65px);
+  }
+  
+  .risk-factors-section {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+  
+  .risk-center-section {
+    flex: 0 0 200px;
+    height: 200px;
+    min-height: 200px;
+    max-height: 200px;
+  }
+  
+  .risk-placeholder,
+  .risk-summary {
+    width: 100%;
+    max-width: 350px;
+    height: 180px;
+    min-height: 180px;
+    max-height: 180px;
+    padding: 0.75rem;
+  }
+  
+  .placeholder-circle {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .risk-index-display {
+    font-size: 1.8rem;
+  }
+  
+  .check-risk-btn,
+  .reset-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .risk-placeholder h3,
+  .risk-summary h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Стили центра рисков */
+.risk-placeholder,
+.risk-summary {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 350px;
+  height: 450px;
+  min-width: 350px;
+  max-width: 350px;
+  min-height: 450px;
+  max-height: 450px;
+  border: 3px solid #007bff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.risk-placeholder h3,
+.risk-summary h3 {
+  color: #343a40;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.placeholder-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+  font-size: 2.5rem;
+  color: #6c757d;
+  font-weight: bold;
+  border: 3px dashed #adb5bd;
+}
+
+.risk-index-display {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #007bff;
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+.risk-summary p {
+  color: #6c757d;
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+}
+
+/* Стили значков уровня риска */
+.risk-level-badge {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-size: 0.75rem;
+  border: 2px solid;
+  display: inline-block;
+}
+
+.risk-level-low {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #28a745;
+}
+
+.risk-level-medium {
+  background-color: #fff3cd;
+  color: #856404;
+  border-color: #ffc107;
+}
+
+.risk-level-high {
+  background-color: #ffecd1;
+  color: #8b4513;
+  border-color: #fd7e14;
+}
+
+.risk-level-critical {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #dc3545;
+}
+
+.risk-level-label {
+  font-weight: 600;
+}
+
+/* Стили кнопок */
+.check-risk-btn,
+.reset-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.reset-btn {
+  margin-top: 0;
+}
+
+.check-risk-btn:hover:not(:disabled) {
+  background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+}
+
+.check-risk-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.reset-btn {
+  background: #dc3545;
+  margin-top: 0;
+}
+
+.reset-btn:hover {
+  background: #c82333;
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+
+.validation-message {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Контейнер действий по рискам */
+.risk-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}

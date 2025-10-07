@@ -1,0 +1,61 @@
+@startuml RiskIndexCalculatorClassDiagram
+
+!theme plain
+skinparam backgroundColor transparent
+
+title Risk Index Calculator - Class Диаграмма
+
+' Основные классы
+class Project {
+  +name: string
+  +description: string
+  +factors: Object
+  +riskIndex: number
+  --
+  +constructor(name: string)
+}
+
+class RiskCalculationService {
+  +{static} RISK_WEIGHTS: Object
+  +{static} RISK_CATEGORIES: Object
+  --
+  +{static} calculateRiskIndex(factors: Object): number
+  +{static} getRiskCategory(riskIndex: number): Object
+  +{static} generateRecommendations(factors: Object): string[]
+}
+
+class RiskStore {
+  +currentProject: Project
+  +currentStep: number
+  +projects: Project[]
+  --
+  +updateRiskFactor(factor: string, value: number): void
+  +calculateRiskIndex(): void
+  +nextStep(): void
+  +previousStep(): void
+  +saveProject(): void
+}
+
+class App {
+  --
+  +render(): JSX.Element
+}
+
+class RiskFactorInput {
+  --
+  +render(): JSX.Element
+  +handleFactorChange(value: number): void
+}
+
+' Отношения
+RiskStore --> Project : manages
+App --> RiskStore : uses
+RiskFactorInput --> RiskStore : updates
+RiskStore --> RiskCalculationService : calls
+
+' Заметки
+note right of RiskCalculationService : "5 факторов риска:\n• Рыночный (25%)\n• Технический (20%)\n• Финансовый (25%)\n• Конкурентный (15%)\n• Регулятивный (15%)"
+
+note bottom of RiskStore : "Zustand state management\nБраузерное хранение данных"
+
+@enduml

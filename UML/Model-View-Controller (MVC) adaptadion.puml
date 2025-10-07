@@ -1,0 +1,58 @@
+@startuml MVC_Adaptation
+!theme plain
+skinparam backgroundColor White
+skinparam componentStyle rectangle
+
+package "Модель (Zustand)" as Model {
+  component "RiskStore" as RiskStore
+  component "Project.js" as Project
+  component "Calculations" as Calc
+}
+
+package "Представление (React JSX)" as View {
+  component "App.jsx" as App
+  component "Components" as Components
+  component "UI Elements" as UIElements
+}
+
+package "Контроллер (React Hooks)" as Controller {
+  component "useRiskStore" as useRiskStore
+  component "Event Handlers" as EventHandlers
+  component "State Updates" as StateUpdates
+}
+
+' Двунаправленные отношения
+Model <--> View : Поток данных
+View <--> Controller : Взаимодействие с пользователем
+Controller <--> Model : Управление состоянием
+
+' Внутренние отношения
+RiskStore --> Project
+RiskStore --> Calc
+App --> Components
+Components --> UIElements
+useRiskStore --> EventHandlers
+EventHandlers --> StateUpdates
+
+note top of Model
+  Zustand State Management
+  - Централизованное состояние
+  - Бизнес-логика
+  - Расчеты рисков
+end note
+
+note top of View
+  React Components
+  - Пользовательский интерфейс
+  - Отображение данных
+  - UI компоненты
+end note
+
+note top of Controller
+  React Hooks
+  - Обработка событий
+  - Обновление состояния
+  - Связь View и Model
+end note
+
+@enduml
