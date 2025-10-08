@@ -89,9 +89,9 @@ const RiskFactorInput = () => {
       <div className="card-body d-flex flex-column">
         {/* Заголовок */}
         <div className="mb-4">
-          <h4 className="card-title text-primary mb-3">
+          <h2 className="card-title text-primary mb-3">
             Оценка факторов риска
-          </h4>
+          </h2>
 
           {/* Этапы прогресса */}
           <div className="d-flex flex-wrap justify-content-center gap-2 mb-3">
@@ -106,6 +106,8 @@ const RiskFactorInput = () => {
                   onClick={() => handleStepClick(index)}
                   style={{ width: "40px", height: "40px" }}
                   title={factor.label}
+                  aria-label={`Шаг ${index + 1}: ${factor.label}${factors[factor.key] > 0 ? ' (завершено)' : ''}`}
+                  aria-current={index === currentStep ? 'step' : false}
                 >
                   <small className="fw-bold">{index + 1}</small>
                 </button>
@@ -126,12 +128,13 @@ const RiskFactorInput = () => {
             <div className="card-body d-flex flex-column justify-content-between">
               {/* Заголовок фактора */}
               <div className="d-flex justify-content-between align-items-center mb-3">
-                <h5 className="mb-0 text-primary fs-4">
+                <h3 className="mb-0 text-dark fs-4">
                   {currentFactor.label}
-                </h5>
+                </h3>
                 <span
                   className="badge bg-primary fs-6 px-3 py-2"
                   style={{ width: "60px" }}
+                  aria-label={`Текущее значение: ${currentValue.toFixed(1)} из 10`}
                 >
                   {currentValue.toFixed(1)}
                 </span>
@@ -144,7 +147,11 @@ const RiskFactorInput = () => {
 
               {/* Ползунок */}
               <div className="mb-4">
+                <label htmlFor={`risk-factor-${currentStep}`} className="form-label visually-hidden">
+                  {currentFactor.label} - значение от 0 до 10
+                </label>
                 <input
+                  id={`risk-factor-${currentStep}`}
                   type="range"
                   className="form-range"
                   min="0"
@@ -152,6 +159,11 @@ const RiskFactorInput = () => {
                   step="0.1"
                   value={currentValue}
                   onChange={(e) => handleFactorChange(e.target.value)}
+                  aria-label={`${currentFactor.label}: ${currentValue.toFixed(1)} из 10. ${currentFactor.description}`}
+                  aria-valuemin="0"
+                  aria-valuemax="10"
+                  aria-valuenow={currentValue}
+                  aria-valuetext={`${currentValue.toFixed(1)} из 10`}
                 />
                 <div className="d-flex justify-content-between mt-2">
                   <small className="text-muted">0 (Минимальный)</small>

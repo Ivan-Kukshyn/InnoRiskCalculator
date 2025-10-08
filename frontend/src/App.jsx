@@ -74,9 +74,9 @@ function App() {
                 {!riskCalculated ? (
                   <div className="card shadow-sm h-100 border-primary">
                     <div className="card-body d-flex flex-column justify-content-center text-center">
-                      <h5 className="card-title text-primary mb-4">
+                      <h3 className="card-title text-primary mb-4">
                         Индекс риска
-                      </h5>
+                      </h3>
                       <div
                         className="mx-auto mb-4 d-flex align-items-center justify-content-center border border-3 border-dashed border-secondary rounded-circle bg-light"
                         style={{ width: "120px", height: "120px" }}
@@ -89,15 +89,17 @@ function App() {
                         className="btn btn-primary btn-lg mb-3"
                         onClick={handleCheckRisk}
                         disabled={!allFactorsSet}
+                        aria-describedby="risk-status-message"
+                        aria-label="Рассчитать индекс риска на основе введенных факторов"
                       >
                         Проверить риск
                       </button>
                       {!allFactorsSet ? (
-                        <div className="alert alert-warning small">
-                          Установите все факторы риска после установки всех рисков.
+                        <div id="risk-status-message" className="alert alert-warning small" role="status" aria-live="polite">
+                          Установите все факторы риска перед расчетом.
                         </div>
                       ) : (
-                        <div className="alert alert-success small">
+                        <div id="risk-status-message" className="alert alert-success small" role="status" aria-live="polite">
                           Все факторы риска были оценены! Теперь вы можете
                           проверить свой риск.
                         </div>
@@ -107,24 +109,29 @@ function App() {
                 ) : (
                   <div className="card shadow-sm h-100 border-primary">
                     <div className="card-body d-flex flex-column justify-content-center text-center">
-                      <h5 className="card-title text-primary mb-3">
+                      <h3 className="card-title text-primary mb-3">
                         Индекс риска
-                      </h5>
-                      <div className="display-3 fw-bold text-primary mb-2">
+                      </h3>
+                      <div 
+                        className="display-3 fw-bold text-primary mb-2"
+                        aria-label={`Индекс риска составляет ${currentProject.riskIndex.toFixed(2)} из 10 возможных баллов`}
+                      >
                         {currentProject.riskIndex.toFixed(2)}
                       </div>
-                      <p className="text-muted mb-4">из 10 возможных</p>
+                      <p className="text-muted mb-4" aria-hidden="true">из 10 возможных</p>
                       <div className="d-flex flex-column gap-3">
                         <span
                           className={`badge bg-${getBadgeClass(
                             riskCategory.key.toLowerCase()
                           )} fs-5 py-3 px-4`}
+                          aria-label={`Уровень риска: ${riskCategory.label}`}
                         >
                           {riskCategory.label}
                         </span>
                         <button
                           className="btn btn-lg mb-3 btn-outline-danger"
                           onClick={handleReset}
+                          aria-label="Сбросить все факторы риска и начать заново"
                         >
                           Сбросить все
                         </button>
