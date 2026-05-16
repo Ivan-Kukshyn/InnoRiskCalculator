@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  root: 'frontend',
   server: {
     port: 5173,
     proxy: {
@@ -14,6 +15,6 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'dist',
+    outDir: './dist',
   },
-})
+}) 

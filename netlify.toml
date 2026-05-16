@@ -1,4 +1,3 @@
 [build]
   base = "frontend"
   command = "npm ci --include=dev && npm run build"
-  publish = "dist"
