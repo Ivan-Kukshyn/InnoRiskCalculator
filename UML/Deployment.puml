@@ -2,36 +2,65 @@
 
 !theme plain
 skinparam backgroundColor transparent
+skinparam shadowing false
 
-title Risk Index Calculator - Deployment Архитектура
+title Risk Index Calculator - Deployment Diagram
 
-' Разработка и создание
-node "Разработка" as Dev {
-  artifact "React + Vite\nИсходный код"
+node "Developer PC" as Dev {
+  artifact "Source Code\nReact + Vite" as Source
+  artifact "package.json" as Package
 }
 
-artifact "Статическая сборка\n(/dist)" as Build
-
-' Хостинг
-cloud "Статический хостинг\n(GitHub Pages, Vercel, Netlify)" as Hosting
-
-' Пользовательская среда
-node "Браузер пользователя" as Browser {
-  artifact "React App"
-  artifact "Локальное хранилище"
+node "Build System" as Build {
+  artifact "npm install" as Install
+  artifact "npm run build" as BuildCmd
+  artifact "dist/" as Dist
 }
 
-' Последовательность развертывания
-Dev --> Build : npm run build
-Build --> Hosting : deploy static files
-Hosting --> Browser : HTTPS delivery
-Browser --> Browser : локальные расчеты
+cloud "Hosting" as Hosting {
+  artifact "HTML / CSS / JS" as StaticFiles
+}
 
-' Заметки
-note right of Build : "HTML, CSS, JavaScript\nНе требуется серверная среда выполнения"
+node "User Device" as Device {
 
-note bottom of Browser : "Клиентские расчеты рисков\nХранение проектов в браузере"
+  node "Browser" as Browser {
+    artifact "React SPA" as ReactApp
+    artifact "Tailwind CSS UI" as TailwindUI
+    artifact "Recharts" as Recharts
+    database "localStorage" as LocalStorage
+  }
+}
 
-note top of Hosting : "Бесплатный статический хостинг\nГлобальная доставка CDN"
+node "Vite Dev Server\nlocalhost:5173" as DevServer
+
+Source --> Install
+Install --> BuildCmd
+BuildCmd --> Dist
+Dist --> Hosting
+
+Device --> Hosting : HTTPS request
+Hosting --> Browser : static files
+
+Browser --> ReactApp
+ReactApp --> TailwindUI
+ReactApp --> Recharts
+ReactApp --> LocalStorage
+
+Source --> DevServer : npm run dev
+DevServer --> Browser : hot reload
+
+note right of Build
+  Production build:
+  - npm install
+  - npm run build
+  - deploy dist/
+end note
+
+note bottom of Browser
+  SPA працює у браузері:
+  - локальні розрахунки
+  - Zustand persistence
+  - localStorage storage
+end note
 
 @enduml

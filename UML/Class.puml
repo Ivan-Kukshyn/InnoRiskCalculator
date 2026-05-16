@@ -2,60 +2,226 @@
 
 !theme plain
 skinparam backgroundColor transparent
+skinparam classAttributeIconSize 0
+skinparam shadowing false
 
-title Risk Index Calculator - Class Диаграмма
+title Risk Index Calculator - Class Діаграма
 
-' Основные классы
-class Project {
+class RiskProject {
+  +id: number
   +name: string
   +description: string
-  +factors: Object
+  +factors: RiskFactors
   +riskIndex: number
-  --
-  +constructor(name: string)
+  +createdAt: string
+}
+
+class RiskFactors {
+  +marketRisk: number
+  +technicalRisk: number
+  +financialRisk: number
+  +competitionRisk: number
+  +regulatoryRisk: number
+}
+
+class RiskCategory {
+  +key: string
+  +min: number
+  +max: number
+  +label: string
+  +color: string
+}
+
+class RiskFactorDefinition {
+  +key: string
+  +label: string
+  +description: string
 }
 
 class RiskCalculationService {
   +{static} RISK_WEIGHTS: Object
   +{static} RISK_CATEGORIES: Object
   --
-  +{static} calculateRiskIndex(factors: Object): number
-  +{static} getRiskCategory(riskIndex: number): Object
-  +{static} generateRecommendations(factors: Object): string[]
+  +{static} calculateRiskIndex(factors: RiskFactors): number
+  +{static} getRiskCategory(riskIndex: number): RiskCategory
+  +{static} generateRecommendations(factors: RiskFactors): string[]
 }
 
-class RiskStore {
-  +currentProject: Project
-  +currentStep: number
-  +projects: Project[]
+class RiskFactorsService {
+  +RISK_FACTORS: RiskFactorDefinition[]
   --
+  +getRiskFactorByStep(step: number): RiskFactorDefinition
+  +getLastRiskFactorStep(): number
+  +isRiskFactorCompleted(factors: RiskFactors, factorKey: string): boolean
+  +areAllRiskFactorsSet(factors: RiskFactors): boolean
+}
+
+class RiskStoreState {
+  +currentProject: RiskProject
+  +riskCalculated: boolean
+  +currentStep: number
+  +completedSteps: number[]
+  +projects: RiskProject[]
+}
+
+class RiskStoreActions {
+  +updateProjectName(name: string): void
+  +updateProjectDescription(description: string): void
   +updateRiskFactor(factor: string, value: number): void
   +calculateRiskIndex(): void
+  +resetCalculation(): void
+  +setCurrentStep(step: number): void
   +nextStep(): void
   +previousStep(): void
+  +markStepCompleted(step: number): void
+  +isStepCompleted(step: number): boolean
   +saveProject(): void
+  +loadProject(projectId: number): void
+}
+
+class RiskStoreSelectors {
+  +allFactorsSet(state): boolean
+  +currentProject(state): RiskProject
+  +currentStep(state): number
+  +factors(state): RiskFactors
+  +riskCalculated(state): boolean
+  +riskCategory(state): RiskCategory
+  +riskIndex(state): number
+}
+
+class UseRiskStore {
+  +persist(localStorage): void
+  +partialize(state): Object
+  +migrate(persistedState): RiskStoreState
+}
+
+class UseRiskDashboard {
+  +activeView: string
+  +chartType: string
+  +allFactorsSet: boolean
+  +completedCount: number
+  +totalFactors: number
+  +riskCategory: RiskCategory
+  --
+  +setActiveView(view: string): void
+  +setChartType(type: string): void
+  +calculateRiskIndex(): void
+  +resetCalculation(): void
+}
+
+class UseRiskFactorWizard {
+  +currentFactor: RiskFactorDefinition
+  +currentStep: number
+  +currentValue: number
+  +isFirstStep: boolean
+  +isLastStep: boolean
+  +riskFactors: RiskFactorDefinition[]
+  --
+  +isStepCompleted(stepIndex: number): boolean
+  +goToNextStep(): void
+  +goToPreviousStep(): void
+  +setCurrentStep(step: number): void
+  +updateCurrentFactor(value: number): void
 }
 
 class App {
-  --
   +render(): JSX.Element
 }
 
 class RiskFactorInput {
-  --
   +render(): JSX.Element
-  +handleFactorChange(value: number): void
 }
 
-' Отношения
-RiskStore --> Project : manages
-App --> RiskStore : uses
-RiskFactorInput --> RiskStore : updates
-RiskStore --> RiskCalculationService : calls
+class RiskSummaryCard {
+  +render(): JSX.Element
+}
 
-' Заметки
-note right of RiskCalculationService : "5 факторов риска:\n• Рыночный (25%)\n• Технический (20%)\n• Финансовый (25%)\n• Конкурентный (15%)\n• Регулятивный (15%)"
+class RiskDashboardOverview {
+  +render(): JSX.Element
+}
 
-note bottom of RiskStore : "Zustand state management\nБраузерное хранение данных"
+class RiskChartPanel {
+  +render(): JSX.Element
+}
+
+class RiskChart {
+  +render(): JSX.Element
+}
+
+class BarChart {
+  +render(): JSX.Element
+}
+
+class RadarChart {
+  +render(): JSX.Element
+}
+
+class PieChart {
+  +render(): JSX.Element
+}
+
+class LocalStorage {
+  +setItem(key: string, value: string): void
+  +getItem(key: string): string
+}
+
+RiskProject *-- RiskFactors
+RiskProject --> RiskCategory : результат розрахунку
+RiskFactorDefinition --> RiskFactors : описує ключ фактора
+
+UseRiskStore *-- RiskStoreState
+UseRiskStore *-- RiskStoreActions
+UseRiskStore --> RiskStoreSelectors
+UseRiskStore --> LocalStorage : persist
+RiskStoreActions --> RiskCalculationService : calculateRiskIndex()
+RiskStoreActions --> RiskFactorsService : next/previous step
+RiskStoreSelectors --> RiskCalculationService : getRiskCategory()
+RiskStoreSelectors --> RiskFactorsService : allFactorsSet()
+
+UseRiskDashboard --> UseRiskStore : selectors + actions
+UseRiskDashboard --> RiskStoreSelectors
+UseRiskFactorWizard --> UseRiskStore : selectors + actions
+UseRiskFactorWizard --> RiskFactorsService
+
+App --> UseRiskDashboard
+App --> RiskDashboardOverview
+App --> RiskFactorInput
+App --> RiskSummaryCard
+App --> RiskChartPanel
+
+RiskFactorInput --> UseRiskFactorWizard
+RiskSummaryCard --> RiskCategory
+RiskDashboardOverview --> RiskCategory
+RiskChartPanel --> RiskChart
+RiskChart --> BarChart
+RiskChart --> RadarChart
+RiskChart --> PieChart
+
+note right of RiskCalculationService
+  Ваги факторів:
+  marketRisk = 0.25
+  technicalRisk = 0.20
+  financialRisk = 0.20
+  competitionRisk = 0.15
+  regulatoryRisk = 0.20
+end note
+
+note bottom of UseRiskStore
+  Zustand store:
+  - централізований стан
+  - actions
+  - selectors
+  - localStorage persistence
+end note
+
+note bottom of UseRiskDashboard
+  ViewModel для dashboard:
+  готує похідні дані для App
+end note
+
+note bottom of UseRiskFactorWizard
+  ViewModel для майстра оцінки:
+  керує кроками та оновленням факторів
+end note
 
 @enduml

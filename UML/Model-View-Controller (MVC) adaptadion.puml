@@ -2,57 +2,102 @@
 !theme plain
 skinparam backgroundColor White
 skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam shadowing false
 
-package "Модель (Zustand)" as Model {
-  component "RiskStore" as RiskStore
-  component "Project.js" as Project
-  component "Calculations" as Calc
-}
+title Risk Index Calculator - Адаптація MVC
 
-package "Представление (React JSX)" as View {
+actor "Користувач" as User
+
+package "View\nReact + Tailwind CSS" as View {
   component "App.jsx" as App
-  component "Components" as Components
-  component "UI Elements" as UIElements
+  package "layout" {
+    component "AppLayout" as AppLayout
+    component "AppHeader" as AppHeader
+    component "DashboardGrid" as DashboardGrid
+  }
+  package "risk" {
+    component "RiskDashboardOverview" as Overview
+    component "RiskFactorInput" as RiskInput
+    component "RiskSummaryCard" as Summary
+  }
+  package "charts\nRecharts" {
+    component "RiskChartPanel" as ChartPanel
+    component "BarChart" as BarChart
+    component "RadarChart" as RadarChart
+    component "PieChart" as PieChart
+  }
+  package "ui" {
+    component "SegmentedTabs" as Tabs
+    component "DashboardStatCard" as StatCard
+  }
 }
 
-package "Контроллер (React Hooks)" as Controller {
-  component "useRiskStore" as useRiskStore
-  component "Event Handlers" as EventHandlers
-  component "State Updates" as StateUpdates
+package "Controller / ViewModel\nReact Hooks" as Controller {
+  component "useRiskDashboard" as DashboardHook
+  component "useRiskFactorWizard" as WizardHook
+  component "Store actions" as StoreActions
+  component "Selectors" as Selectors
 }
 
-' Двунаправленные отношения
-Model <--> View : Поток данных
-View <--> Controller : Взаимодействие с пользователем
-Controller <--> Model : Управление состоянием
+package "Model\nState + Domain Services" as Model {
+  component "useRiskStore\nZustand + persist" as Store
+  component "RiskCalculationService" as CalcService
+  component "riskFactors service" as FactorService
+  database "localStorage" as LocalStorage
+}
 
-' Внутренние отношения
-RiskStore --> Project
-RiskStore --> Calc
-App --> Components
-Components --> UIElements
-useRiskStore --> EventHandlers
-EventHandlers --> StateUpdates
+User --> App : взаємодія з інтерфейсом
 
-note top of Model
-  Zustand State Management
-  - Централизованное состояние
-  - Бизнес-логика
-  - Расчеты рисков
+App --> AppLayout : композиція сторінки
+AppLayout --> AppHeader
+AppLayout --> DashboardGrid
+DashboardGrid --> Overview
+DashboardGrid --> RiskInput
+DashboardGrid --> Summary
+App --> ChartPanel
+App --> Tabs
+Overview --> StatCard
+ChartPanel --> BarChart
+ChartPanel --> RadarChart
+ChartPanel --> PieChart
+
+App --> DashboardHook : отримує стан екрана
+RiskInput --> WizardHook : керує майстром оцінки
+DashboardHook --> Selectors : читає похідні дані
+WizardHook --> Selectors : читає поточний крок
+DashboardHook --> StoreActions : запуск розрахунку / скидання
+WizardHook --> StoreActions : зміна факторів / навігація
+
+Selectors --> Store : читання стану
+StoreActions --> Store : оновлення стану
+Store --> CalcService : обчислення індексу ризику
+Store --> FactorService : межі кроків та фактори
+Store --> LocalStorage : persist / hydrate
+FactorService --> Store : метадані факторів
+
+note right of View
+  Відповідає тільки за відображення:
+  - dashboard layout
+  - форми оцінювання
+  - картки результатів
+  - Recharts-візуалізації
 end note
 
-note top of View
-  React Components
-  - Пользовательский интерфейс
-  - Отображение данных
-  - UI компоненты
+note bottom of Controller
+  Адаптує Model до View:
+  - selectors
+  - workflow hooks
+  - обробка UI-подій
+  - підготовка даних для компонентів
 end note
 
-note top of Controller
-  React Hooks
-  - Обработка событий
-  - Обновление состояния
-  - Связь View и Model
+note left of Model
+  Містить стан і бізнес-правила:
+  - Zustand store
+  - localStorage persistence
+  - розрахунок ризику
+  - довідник факторів ризику
 end note
 
 @enduml

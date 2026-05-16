@@ -1,40 +1,44 @@
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import RiskCalculationService from '../services/riskCalculation';
+import {
+  areAllRiskFactorsSet,
+  getLastRiskFactorStep,
+} from '../services/riskFactors';
 
-const useRiskStore = create((set, get) => ({
-  // Состояние проекта
-  currentProject: {
-    name: '',
-    description: '',
-    factors: {
-      marketRisk: 0,
-      technicalRisk: 0,
-      financialRisk: 0,
-      competitionRisk: 0,
-      regulatoryRisk: 0,
-    },
-    riskIndex: 0,
+const RISK_STORE_NAME = 'risk-calculator-storage';
+const RISK_STORE_VERSION = 1;
+
+const createInitialProject = () => ({
+  name: '',
+  description: '',
+  factors: {
+    marketRisk: 0,
+    technicalRisk: 0,
+    financialRisk: 0,
+    competitionRisk: 0,
+    regulatoryRisk: 0,
   },
+  riskIndex: 0,
+});
 
-  // Флаг для отображения результатов
+const createInitialState = () => ({
+  currentProject: createInitialProject(),
   riskCalculated: false,
-
-  // Состояние мастера ввода
   currentStep: 0,
   completedSteps: [],
-
-  // Список сохраненных проектов
   projects: [],
+});
 
-  // Действия
+const createRiskActions = (set, get) => ({
   updateProjectName: (name) =>
     set((state) => ({
-      currentProject: { ...state.currentProject, name }
+      currentProject: { ...state.currentProject, name },
     })),
 
   updateProjectDescription: (description) =>
     set((state) => ({
-      currentProject: { ...state.currentProject, description }
+      currentProject: { ...state.currentProject, description },
     })),
 
   updateRiskFactor: (factor, value) =>
@@ -43,10 +47,10 @@ const useRiskStore = create((set, get) => ({
         ...state.currentProject,
         factors: {
           ...state.currentProject.factors,
-          [factor]: value
-        }
+          [factor]: value,
+        },
       },
-      riskCalculated: false
+      riskCalculated: false,
     })),
 
   calculateRiskIndex: () => {
@@ -58,19 +62,19 @@ const useRiskStore = create((set, get) => ({
       set((state) => ({
         currentProject: {
           ...state.currentProject,
-          riskIndex
+          riskIndex,
         },
-        riskCalculated: true
+        riskCalculated: true,
       }));
     } catch (error) {
-      console.error('Error calculating risk index:', error);
-      // Установить значение 0, если расчет не удался
+      console.error('Помилка при обчисленні індексу ризику:', error);
+
       set((state) => ({
         currentProject: {
           ...state.currentProject,
-          riskIndex: 0
+          riskIndex: 0,
         },
-        riskCalculated: false
+        riskCalculated: false,
       }));
     }
   },
@@ -80,49 +84,33 @@ const useRiskStore = create((set, get) => ({
       riskCalculated: false,
       currentStep: 0,
       completedSteps: [],
-      currentProject: {
-        name: '',
-        description: '',
-        factors: {
-          marketRisk: 0,
-          technicalRisk: 0,
-          financialRisk: 0,
-          competitionRisk: 0,
-          regulatoryRisk: 0,
-        },
-        riskIndex: 0,
-      }
+      currentProject: createInitialProject(),
     });
   },
 
-  // Навигационные действия мастера ввода
   setCurrentStep: (step) => {
     set({ currentStep: step });
   },
 
   nextStep: () => {
-    set((state) => {
-      const newStep = Math.min(state.currentStep + 1, 4); // 5 factors, 0-4 index
-      return { currentStep: newStep };
-    });
+    set((state) => ({
+      currentStep: Math.min(state.currentStep + 1, getLastRiskFactorStep()),
+    }));
   },
 
   previousStep: () => {
     set((state) => ({
-      currentStep: Math.max(state.currentStep - 1, 0)
+      currentStep: Math.max(state.currentStep - 1, 0),
     }));
   },
 
   markStepCompleted: (step) => {
     set((state) => ({
-      completedSteps: [...new Set([...state.completedSteps, step])]
+      completedSteps: [...new Set([...state.completedSteps, step])],
     }));
   },
 
-  isStepCompleted: (step) => {
-    const state = get();
-    return state.completedSteps.includes(step);
-  },
+  isStepCompleted: (step) => get().completedSteps.includes(step),
 
   saveProject: () => {
     const { currentProject, projects } = get();
@@ -134,27 +122,81 @@ const useRiskStore = create((set, get) => ({
 
     set({
       projects: [...projects, newProject],
-      currentProject: {
-        name: '',
-        description: '',
-        factors: {
-          marketRisk: 0,
-          technicalRisk: 0,
-          financialRisk: 0,
-          competitionRisk: 0,
-          regulatoryRisk: 0,
-        },
-        riskIndex: 0,
-      }
+      currentProject: createInitialProject(),
     });
   },
 
   loadProject: (projectId) => {
-    const project = get().projects.find(p => p.id === projectId);
+    const project = get().projects.find((item) => item.id === projectId);
+
     if (project) {
       set({ currentProject: { ...project } });
     }
   },
-}));
+});
+
+const selectPersistedRiskState = (state) => ({
+  currentProject: state.currentProject,
+  riskCalculated: state.riskCalculated,
+  currentStep: state.currentStep,
+  completedSteps: state.completedSteps,
+  projects: state.projects,
+});
+
+const normalizePersistedRiskState = (persistedState) => {
+  const initialState = createInitialState();
+  const persistedProject = persistedState?.currentProject ?? {};
+
+  return {
+    ...initialState,
+    ...persistedState,
+    currentProject: {
+      ...initialState.currentProject,
+      ...persistedProject,
+      factors: {
+        ...initialState.currentProject.factors,
+        ...persistedProject.factors,
+      },
+    },
+  };
+};
+
+export const riskStoreSelectors = {
+  allFactorsSet: (state) => areAllRiskFactorsSet(state.currentProject.factors),
+  completedSteps: (state) => state.completedSteps,
+  currentProject: (state) => state.currentProject,
+  currentStep: (state) => state.currentStep,
+  factors: (state) => state.currentProject.factors,
+  projects: (state) => state.projects,
+  riskCalculated: (state) => state.riskCalculated,
+  riskCategory: (state) =>
+    RiskCalculationService.getRiskCategory(state.currentProject.riskIndex),
+  riskIndex: (state) => state.currentProject.riskIndex,
+
+  calculateRiskIndex: (state) => state.calculateRiskIndex,
+  loadProject: (state) => state.loadProject,
+  markStepCompleted: (state) => state.markStepCompleted,
+  nextStep: (state) => state.nextStep,
+  previousStep: (state) => state.previousStep,
+  resetCalculation: (state) => state.resetCalculation,
+  saveProject: (state) => state.saveProject,
+  setCurrentStep: (state) => state.setCurrentStep,
+  updateProjectDescription: (state) => state.updateProjectDescription,
+  updateProjectName: (state) => state.updateProjectName,
+  updateRiskFactor: (state) => state.updateRiskFactor,
+};
+
+const useRiskStore = create(
+  persist((set, get) => ({
+    ...createInitialState(),
+    ...createRiskActions(set, get),
+  }), {
+    name: RISK_STORE_NAME,
+    version: RISK_STORE_VERSION,
+    storage: createJSONStorage(() => localStorage),
+    partialize: selectPersistedRiskState,
+    migrate: normalizePersistedRiskState,
+  })
+);
 
 export default useRiskStore;

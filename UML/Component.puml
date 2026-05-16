@@ -2,47 +2,81 @@
 
 !theme plain
 skinparam backgroundColor transparent
+skinparam componentStyle rectangle
+skinparam shadowing false
 
-title Risk Index Calculator - Component Архитектура
+title Risk Index Calculator - Component Diagram
 
-' Основные компоненты
-package "UI Components" {
-  [App] as App
-  [RiskFactorInput] as Input
-  [Results Display] as Results
+actor "Користувач" as User
+
+package "Frontend" {
+
+  [App.jsx] as App
+
+  package "UI Components" {
+    [Navbar] as Navbar
+    [Sidebar] as Sidebar
+    [RiskForm] as RiskForm
+    [ResultCard] as ResultCard
+    [RiskChart] as RiskChart
+  }
+
+  package "Charts" {
+    [BarChart] as BarChart
+    [RadarChart] as RadarChart
+    [PieChart] as PieChart
+  }
+
+  package "Hooks" {
+    [useRiskDashboard] as UseDashboard
+  }
+
+  package "State" {
+    [useRiskStore] as Store
+    [Zustand Persist] as Persist
+  }
+
+  package "Services" {
+    [RiskCalculationService] as CalcService
+    [riskFactors] as RiskFactors
+  }
+
+  database "localStorage" as LocalStorage
 }
 
-package "Логика приложения" {
-  [Zustand Store] as Store
-  [RiskCalculationService] as CalcService
-}
+User --> App
 
-package "Хранилище браузера" {
-  [Local Storage] as Storage
-}
+App --> Navbar
+App --> Sidebar
+App --> RiskForm
+App --> ResultCard
+App --> RiskChart
 
-package "Среда выполнения" {
-  [React + Vite] as Framework
-  [Web Browser] as Browser
-}
+RiskChart --> BarChart
+RiskChart --> RadarChart
+RiskChart --> PieChart
 
-' Поток компонентов
-App --> Input : отображает
-App --> Results : отображает
-Input --> Store : обновляет
-Results --> Store : читает
-Store --> CalcService : выполняет расчет
-Store --> Storage : сохраняет/загружает
+RiskForm --> UseDashboard
+UseDashboard --> Store
 
-' Среда выполнения
-Framework --> App : запускает
-Browser --> Framework : хостит
+Store --> CalcService
+Store --> RiskFactors
+Store --> Persist
+Persist --> LocalStorage
 
-' Заметки
-note right of CalcService : "5 факторов риска\n4 категории результата\nМгновенный расчет"
+note right of RiskChart
+  Recharts visualization
+  - Bar Chart
+  - Radar Chart
+  - Pie Chart
+end note
 
-note bottom of Storage : "Сохранение проектов\nВ браузере пользователя"
-
-note top of Framework : "React 19 + Vite\nBootstrap UI"
+note bottom of Store
+  Zustand state:
+  - factors
+  - currentStep
+  - history
+  - riskResult
+end note
 
 @enduml

@@ -1,28 +1,28 @@
-// Сервис для расчета индекса риска инновационных продуктов
+// сервіс для розрахунку індексу ризику інноваційних продуктів
 
 export class RiskCalculationService {
 
-  // Веса факторов риска
+  // вага факторів ризику
   static RISK_WEIGHTS = {
-    marketRisk: 0.25,      // Рыночный риск
-    technicalRisk: 0.20,   // Технический риск
-    financialRisk: 0.20,   // Финансовый риск
-    competitionRisk: 0.15, // Конкурентный риск
-    regulatoryRisk: 0.20,  // Регулятивный риск
+    marketRisk: 0.25,      // Ринковий ризик
+    technicalRisk: 0.20,   // Технічний ризик
+    financialRisk: 0.20,   // Фінансовий ризик
+    competitionRisk: 0.15, // Конкурентний ризик
+    regulatoryRisk: 0.20,  // Регулятивний ризик
   };
 
-  // Категории риска
+  // категорії ризику
   static RISK_CATEGORIES = {
-    LOW: { min: 0, max: 3, label: 'Низкий риск', color: '#28a745' },
-    MEDIUM: { min: 3, max: 6, label: 'Средний риск', color: '#ffc107' },
-    HIGH: { min: 6, max: 8, label: 'Высокий риск', color: '#fd7e14' },
-    CRITICAL: { min: 8, max: 10, label: 'Критический риск', color: '#dc3545' },
+    LOW: { min: 0, max: 3, label: 'Низький ризик', color: '#28a745' },
+    MEDIUM: { min: 3, max: 6, label: 'Середній ризик', color: '#ffc107' },
+    HIGH: { min: 6, max: 8, label: 'Високий ризик', color: '#fd7e14' },
+    CRITICAL: { min: 8, max: 10, label: 'Критичний ризик', color: '#dc3545' },
   };
 
-  // Расчет индекса риска
+  // розрахунок індексу ризику
   static calculateRiskIndex(factors) {
     if (!factors || typeof factors !== 'object') {
-      throw new Error('Факторы риска должны быть объектом');
+      throw new Error('Фактори ризику повинні бути об\'єктом');
     }
 
     let totalRisk = 0;
@@ -32,7 +32,7 @@ export class RiskCalculationService {
       if (Object.prototype.hasOwnProperty.call(factors, factor) && factors[factor] !== undefined) {
         const value = Number(factors[factor]);
         if (value < 0 || value > 10) {
-          throw new Error(`Значение ${factor} должно быть от 0 до 10`);
+          throw new Error(`Значення ${factor} повинно бути від 0 до 10`);
         }
         totalRisk += value * weight;
         totalWeight += weight;
@@ -46,7 +46,7 @@ export class RiskCalculationService {
     return Math.round((totalRisk / totalWeight) * 100) / 100;
   }
 
-  // Определение категории риска
+  // визначення категорії ризику
   static getRiskCategory(riskIndex) {
     for (const [key, category] of Object.entries(this.RISK_CATEGORIES)) {
       if (riskIndex >= category.min && riskIndex < category.max) {
@@ -56,7 +56,7 @@ export class RiskCalculationService {
     return { ...this.RISK_CATEGORIES.CRITICAL, key: 'CRITICAL' };
   }
 
-  // Генерация рекомендаций на основе факторов риска
+  // генерація рекомендацій на основі факторів ризику
   static generateRecommendations(factors) {
     const recommendations = [];
     
@@ -64,19 +64,19 @@ export class RiskCalculationService {
       if (value >= 7) {
         switch (factor) {
           case 'marketRisk':
-            recommendations.push('Проведите дополнительное исследование рынка и целевой аудитории');
+            recommendations.push('Проведіть додаткове дослідження ринку та цільової аудиторії');
             break;
           case 'technicalRisk':
-            recommendations.push('Рассмотрите возможность создания MVP для технической валидации');
+            recommendations.push('Розгляньте можливість створення MVP для технічної валідації');
             break;
           case 'financialRisk':
-            recommendations.push('Пересмотрите финансовую модель и поищите дополнительные источники финансирования');
+            recommendations.push('Перегляньте фінансову модель та пошукайте додаткові джерела фінансування');
             break;
           case 'competitionRisk':
-            recommendations.push('Усильте конкурентные преимущества и уникальное ценностное предложение');
+            recommendations.push('Посильте конкурентні переваги та унікальну ціннісну пропозицію');
             break;
           case 'regulatoryRisk':
-            recommendations.push('Проконсультируйтесь с юристами по регулятивным требованиям');
+            recommendations.push('Проконсультуйтесь з юристами щодо регулятивних вимог');
             break;
         }
       }

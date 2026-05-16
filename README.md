@@ -1,147 +1,216 @@
-# Risk Index Calculator
+Risk Index Calculator
 
-Client-Side SPA для оценки инвестиционных рисков инновационных продуктов
+Сучасний SPA-застосунок для оцінки інвестиційних ризиків інноваційних продуктів із адаптивним інтерфейсом, інтерактивною візуалізацією даних та централізованим управлінням станом.
 
-Описание про алгоритм расчета рисков
+Опис проєкту
 
-Risk Index Calculator — это клиентское SPA-приложение для расчета инвестиционных рисков, которое позволяет:
-- Рассчитывать индекс риска на основе 5 пользовательских факторов
-- Получать мгновенные результаты расчётов в реальном времени
-- Просматривать категоризацию рисков
-- Использовать интуитивно понятный интерфейс с адаптивным дизайном
+Risk Index Calculator — це frontend SPA-застосунок, розроблений на базі React та Vite, який дозволяє виконувати інтерактивну оцінку ризиків інноваційних проєктів у режимі реального часу.
 
-## Стек технологий
+Застосунок реалізує:
 
-### Frontend (Client-Side Only)
-- React 19.1.1 + JavaScript (ES modules)
-- Vite 7.1.7 (сборка и быстрый старт)
-- Bootstrap 5.3.2 (адаптивная верстка и компоненты)
-- Zustand 4.4.7 (управление состоянием приложения)
-- ESLint (линтинг кода)
+покрокову оцінку факторів ризику;
+автоматичний розрахунок індексу ризику;
+категоризацію рівня ризику;
+інтерактивні графіки та dashboard-аналітику;
+локальне збереження історії розрахунків;
+адаптивний responsive UI.
 
-## Быстрый старт
+Основна мета проєкту — створення сучасного кросплатформного SPA-застосунку для аналізу інвестиційних ризиків із використанням сучасних frontend-технологій та component-based architecture.
 
-### 1. Установка зависимостей
+Основні можливості
+Реалізований функціонал
+Інтерактивна оцінка ризиків;
+Покроковий wizard для введення даних;
+Автоматичний розрахунок risk index;
+Візуалізація результатів через Recharts;
+Категоризація рівня ризику;
+Dashboard UI;
+Responsive design;
+localStorage persistence;
+Zustand state management;
+Оптимізований React rendering.
+Фактори ризику
 
-```bash
-npm install
-```
-Установка всех необходимых зависимостей.
+Застосунок підтримує оцінювання 5 основних факторів ризику:
 
-### 2. Запуск в режиме разработки
-```bash
-npm run dev
-```
+Фактор	Вага
+Market Risk	25%
+Technical Risk	20%
+Financial Risk	20%
+Competition Risk	15%
+Regulatory Risk	20%
+Алгоритм розрахунку ризику
 
-Это запустит приложение на локальном сервере разработки:
-- Приложение: http://localhost:5173
+Індекс ризику обчислюється на основі зваженої суми факторів ризику.
 
-### 3. Сборка для продакшена
-```bash
-npm run build
-npm run preview
-```
-
-- Сборка: создается в папке `frontend/dist`
-- Предпросмотр: http://localhost:4173
-
-## Структура проекта
-
-```
-InnoRiskCalculator/
-├── frontend/                           - фронтенд приложение (React SPA)
-│   ├── src/                           - исходный код приложения
-│   │   ├── App.jsx                    - главный компонент приложения с логикой расчета рисков
-│   │   ├── App.css                    - стили для главного компонента и глобальные стили
-│   │   ├── index.css                  - базовые стили и Bootstrap импорты
-│   │   ├── main.jsx                   - точка входа React приложения, рендер App
-│   │   ├── components/                - React UI компоненты
-│   │   │   ├── RiskFactorInput.jsx    - компонент пошагового ввода факторов риска
-│   │   │   └── RiskFactorInput.css    - стили для компонента ввода факторов
-│   │   ├── hooks/                     - пользовательские React hooks
-│   │   │   └── useRiskStore.js        - Zustand store для управления состоянием
-│   │   └── services/                  - бизнес-логика и утилиты
-│   │       └── riskCalculation.js     - сервис для расчета индекса риска
-│   ├── index.html                     - HTML шаблон
-│   └── public/                        - статические файлы (иконки, изображения)
-│       ├── vite.svg                   
-│       └── calculate-svgrepo-com.svg  - Иконка калькулятора для фавикона
-│
-├── dist/                              - сборка для продакшена (создается при npm run build)
-│   ├── index.html                     - готовый HTML с подключенными ресурсами
-│   └── assets/                        - скомпилированные и минифицированные файлы
-│       ├── index-CCeXK18i.css         - минифицированный CSS (Bootstrap + кастомные стили)
-│       └── index-CyKxcCQ_.js          - минифицированный JS (React + логика приложения)
-│
-├── UML/                               - UML диаграммы проекта
-│   ├── Class.puml                     - диаграмма классов (компоненты, сервисы, store)
-│   ├── Component.puml                 - компонентная архитектура приложения
-│   ├── Deployment.puml               - диаграмма развертывания (статический хостинг)
-│   ├── UseCase.puml                  - диаграмма вариантов использования
-│   └── Model-View-Controller (MVC) adaptadion.puml - адаптация MVC для React
-│
-├── node_modules/                     - зависимости npm (создается при npm install)
-│
-├── package.json                      - конфигурация проекта, зависимости, скрипты
-├── package-lock.json                - фиксированные версии зависимостей
-├── vite.config.js                   - конфигурация сборщика Vite
-├── eslint.config.js                 - правила линтинга кода ESLint
-├── jest.config.js                   - конфигурация тестового фреймворка Jest
-├── babel.config.json               - конфигурация транспайлера Babel для Jest
-├── setupTests.js                   - настройка окружения для тестов
-├── interface.md                    - техническая документация интерфейса
-└── README.md                       - основная документация проекта
-```
-
-## Доступные команды
-
-### Команды разработки:
-```bash
-npm run dev            # Запуск сервера разработки
-npm run build          # Сборка приложения для продакш
-npm run preview        # Предпросмотр собранного приложения
-npm run lint           # ESLint проверка кода
-npm run clean          # Очистка node_modules и lockfile
-npm run clean:dist     # Очистка папки сборки (frontend/dist)
-```
-
-## Функциональность
-
-### Реализованные возможности:
-- Интерактивная оценка рисков: 5 факторов риска с слайдерами (0-10)
-  - Рыночный риск (Market Risk)
-  - Технический риск (Technical Risk) 
-  - Финансовый риск (Financial Risk)
-  - Конкурентный риск (Competition Risk)
-  - Регулятивный риск (Regulatory Risk)
-- Мгновенный расчет: Индекс риска обновляется в реальном времени
-- Категоризация: Автоматическое определение уровня риска (Низкий/Средний/Высокий/Критический)
-- Адаптивный UI: Отзывчивый дизайн с Bootstrap 5
-- Современная архитектура: React 19 с Zustand state management
-
-### Особенности интерфейса:
-- Пошаговый wizard для ввода данных
-- Цветовая индикация уровня риска
-- Прогресс-бары для визуализации факторов
-- Адаптивная верстка для всех устройств
-
-### Формула индекса риска:
-```javascript
-// Весовые коэффициенты для каждого фактора
+Формула:
+Risk Index = Σ(factor × weight)
+Вагові коефіцієнти:
 const weights = {
-  marketRisk: 0.25,      // 25% - рыночные факторы
-  technicalRisk: 0.20,   // 20% - технические риски  
-  financialRisk: 0.25,   // 25% - финансовые риски
-  competitionRisk: 0.15, // 15% - конкурентные риски
-  regulatoryRisk: 0.15   // 15% - регулятивные риски
+  marketRisk: 0.25,
+  technicalRisk: 0.20,
+  financialRisk: 0.20,
+  competitionRisk: 0.15,
+  regulatoryRisk: 0.20
 };
+Приклад розрахунку:
+const factors = {
+  marketRisk: 7.0,
+  technicalRisk: 5.0,
+  financialRisk: 8.0,
+  competitionRisk: 6.0,
+  regulatoryRisk: 4.0
+};
+7.0 × 0.25 = 1.75
+5.0 × 0.20 = 1.00
+8.0 × 0.20 = 1.60
+6.0 × 0.15 = 0.90
+4.0 × 0.20 = 0.80
 
-// Расчет взвешенного индекса
-riskIndex = Σ(factor × weight) × 10
-```
+Risk Index = 6.05
+Категорії ризику
+Діапазон	Категорія
+0.0 – 2.5	🟢 Низький ризик
+2.6 – 5.0	🟡 Середній ризик
+5.1 – 7.5	🟠 Високий ризик
+7.6 – 10.0	🔴 Критичний ризик
+Технологічний стек
+Frontend
+React 19
+JavaScript (ES Modules)
+Vite 7
+Tailwind CSS
+Zustand
+Recharts
+ESLint
+Архітектура
 
-### Категории риска:
-- 0.0-2.5: 🟢 Низкий риск
-- 2.6-5.0: 🟡 Средний риск  
-- 5.1-7.5: 🟠 Высокий риск
-- 7.6-10.0: 🔴 Критический риск
+Проєкт побудований на основі:
+
+Component-Based Architecture;
+Reactive State Management;
+Service Layer Pattern;
+MVC adaptation;
+Responsive Dashboard UI.
+Структура проєкту
+frontend/
+├── src/
+│
+├── components/
+│   ├── layout/
+│   ├── risk/
+│   ├── charts/
+│   └── ui/
+│
+├── hooks/
+├── services/
+├── store/
+├── utils/
+│
+├── App.jsx
+├── main.jsx
+└── index.css
+Інтерфейс застосунку
+Основні UI-компоненти
+Navbar;
+Sidebar;
+RiskForm;
+ResultCard;
+RiskChart;
+RiskHistory.
+Візуалізація даних
+
+Для побудови графіків використовується бібліотека Recharts.
+
+Реалізовані:
+
+Bar Chart;
+Radar Chart;
+Pie Chart.
+Адаптивність
+
+Інтерфейс побудований за принципом mobile-first та підтримує:
+
+Desktop;
+Tablet;
+Mobile layout.
+
+Tailwind CSS забезпечує responsive rendering без окремих mobile templates.
+
+Оптимізація продуктивності
+
+У застосунку використовуються:
+
+React.memo;
+useMemo;
+Zustand persist middleware;
+selector-based rendering.
+
+Це дозволяє:
+
+зменшити кількість rerenders;
+оптимізувати rendering pipeline;
+покращити швидкодію SPA.
+Local Storage Persistence
+
+Історія розрахунків автоматично зберігається у localStorage браузера.
+
+Після перезавантаження сторінки:
+
+стан застосунку відновлюється;
+історія розрахунків не втрачається;
+зберігаються останні введені значення.
+UML документація
+
+Проєкт містить UML-діаграми:
+
+UML/
+├── Class.puml
+├── Component.puml
+├── Deployment.puml
+├── UseCase.puml
+└── MVC-Adaptation.puml
+Встановлення та запуск
+Встановлення залежностей
+npm install
+Запуск dev-сервера
+npm run dev
+
+Після запуску застосунок буде доступний:
+
+http://localhost:5173
+Production build
+npm run build
+Preview production build
+npm run preview
+Доступні команди
+npm run dev        # запуск dev-сервера
+npm run build      # production build
+npm run preview    # preview production build
+npm run lint       # ESLint перевірка
+Lighthouse Performance
+
+Після рефакторингу застосунок демонструє високі показники:
+
+Performance — 90+;
+Accessibility — 95+;
+Best Practices — 100;
+SEO — 90+.
+Подальший розвиток
+
+Планується реалізація:
+
+AI-рекомендацій;
+backend API;
+PostgreSQL integration;
+cloud synchronization;
+predictive analytics;
+export PDF/Excel;
+user authentication.
+Автор
+
+Курсова робота з дисципліни
+«Кросплатформне програмування»
+
+Тема:
+«Кросплатформний калькулятор індексу ризику інноваційних продуктів»
