@@ -73,11 +73,10 @@ const factors = {
 Risk Index=6.05
 
 ## Категорії ризику
-Діапазон	Категорія
-0.0 – 2.5	🟢 Низький ризик
-2.6 – 5.0	🟡 Середній ризик
-5.1 – 7.5	🟠 Високий ризик
-7.6 – 10.0	🔴 Критичний ризик
+- 0.0 – 2.5	🟢 Низький ризик
+- 2.6 – 5.0	🟡 Середній ризик
+- 5.1 – 7.5	🟠 Високий ризик
+- 7.6 – 10.0	🔴 Критичний ризик
 
 ## Технологічний стек
 - React
@@ -97,25 +96,6 @@ Reactive State Management
 Service Layer Pattern
 MVC Adaptation
 Responsive Dashboard UI
-
-## Структура проєкту
-frontend/
-├── src/
-│
-├── components/
-│   ├── layout/
-│   ├── risk/
-│   ├── charts/
-│   └── ui/
-│
-├── hooks/
-├── services/
-├── store/
-├── utils/
-│
-├── App.jsx
-├── main.jsx
-└── index.css
 
 ## Інтерфейс застосунку
 Основні UI-компоненти
@@ -174,12 +154,11 @@ selector-based rendering
 
 Проєкт містить UML-діаграми:
 
-UML/
-├── Class.puml
-├── Component.puml
-├── Deployment.puml
-├── UseCase.puml
-└── MVC-Adaptation.puml
+- Class.puml
+- Component.puml
+- Deployment.puml
+- UseCase.puml
+- MVC-Adaptation.puml
 
 ## Встановлення та запуск
 ### Встановлення залежностей
