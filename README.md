@@ -175,7 +175,7 @@ http://localhost:5173
 npm run build
 
 ## Доступні команди
-npm run dev        # запуск dev-сервера
-npm run build      # production build
-npm run preview    # preview production build
-npm run lint       # ESLint перевірка
+- npm run dev        # запуск dev-сервера
+- npm run build      # production build
+- npm run preview    # preview production build
+- npm run lint       # ESLint перевірка
